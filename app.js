@@ -86,13 +86,16 @@ app.post("/login", async (req, res) => {
     if (student && (await bcrypt.compare(password, student.password))) {
       // Create token
       const { accessToken, refreshToken } = await generateTokens(student);
-      const studentDetail = {
-        std_firstname: student.first_name,
-        std_lastname: student.last_name,
-        std_school: student.school_id,
+      const user = {
+        firstname: student.first_name,
+        lastname: student.last_name,
+        email: student.email,
+        school: student.school_id,
       };
 
-      return res.status(200).json({ accessToken, refreshToken, studentDetail });
+      return res
+        .status(200)
+        .json({ status: "OK", accessToken, refreshToken, user });
     }
 
     return res.status(400).send("Invalid Credentials");
